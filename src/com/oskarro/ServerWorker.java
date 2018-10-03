@@ -47,7 +47,8 @@ public class ServerWorker extends Thread {
             if (tokens != null && tokens.length > 0) {
                 String cmd = tokens[0];
                 // deklaracja poszczególnych komend
-                if ("quit".equalsIgnoreCase(cmd)) {
+                if ("logoff".equals(cmd) || "quit".equalsIgnoreCase(cmd)) {
+                    handleLogoff();
                     break;
                 } else if ("login".equalsIgnoreCase(cmd)) {
                     handleLogin(outputStream, tokens);
@@ -59,6 +60,20 @@ public class ServerWorker extends Thread {
             }
         }
         clientSocket.close();   // zamykanie połączenia
+    }
+
+    // metoda zamykania połączenia klient-server
+    private void handleLogoff() throws IOException {
+        List<ServerWorker> workerList = server.getWorkerList();
+        
+        // wiadomość o zalogowaniu się użytkownika (do wszystkich userów)
+        String onlineMsg = "offline " + login + "\n";
+        for(ServerWorker worker: workerList) {
+            if (!login.equals(worker.getLogin())) {
+                worker.send(onlineMsg);
+            }
+        }
+        clientSocket.close();
     }
 
     // pobiera login
@@ -82,10 +97,24 @@ public class ServerWorker extends Thread {
                 this.login = login;
                 System.out.println("User logged in succesfully: " + login);     // wyświetla informacje o zalogowaniu
 
-                String onlineMsg = "online " + login + "\n";    // wiadomość o zalogowaniu się użytkownika (do wszystkich userów)
-                List<ServerWorker> workerList = server.getWorkerList();
+                List<ServerWorker> workerList = server.getWorkerList();     // lista zalogowanych userów
+
+                // pętla idzie przez wszystkich użytkowników i wysyła info o akutalnie połączonych userach
                 for(ServerWorker worker: workerList) {
-                    worker.send(onlineMsg);
+                    if (worker.getLogin() != null) {
+                        if (!login.equals(worker.getLogin())) {
+                            String msg2 = "online " + worker.getLogin() + "\n";
+                            send(msg2);
+                        }
+                    }
+                }
+
+                // wiadomość o zalogowaniu się użytkownika (do wszystkich userów)
+                String onlineMsg = "online " + login + "\n";
+                for(ServerWorker worker: workerList) {
+                    if (!login.equals(worker.getLogin())) {
+                        worker.send(onlineMsg);
+                    }
                 }
             } else {
                 String msg = "error login\n";
@@ -96,7 +125,9 @@ public class ServerWorker extends Thread {
 
     // wysyłanie wiadomości do użytkowników z informacją o zalogowaniu się nowego użytkownika
     private void send(String msg) throws IOException {
-        outputStream.write(msg.getBytes());
+        if (login != null) {
+            outputStream.write(msg.getBytes());
+        }
     }
 
 }
