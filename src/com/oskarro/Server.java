@@ -42,4 +42,9 @@ public class Server extends Thread {
             e.printStackTrace();
         }
     }
+
+    // usuwanie usera z workerList (w przypadku wylogowania)
+    public void removeWorker(ServerWorker serverWorker) {
+        workerList.remove(serverWorker);
+    }
 }

@@ -15,3 +15,4 @@ User & Server
 Commands:
     login <user> <password>
     logoff
+    msg <user> text....

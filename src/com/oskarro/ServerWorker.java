@@ -52,6 +52,10 @@ public class ServerWorker extends Thread {
                     break;
                 } else if ("login".equalsIgnoreCase(cmd)) {
                     handleLogin(outputStream, tokens);
+                } else if ("msg".equalsIgnoreCase(cmd)) {
+                    // poniższa linijka łączy tokeny (poszczególne fragmenty wprowadzonej komendy) - bez tego można by wpisać tylko jeden wyraz jako wiadomość)
+                    String[] tokensMsg = StringUtils.split(line, null, 3);
+                    handleMessage(tokensMsg);
                 } else {
                     // gdy nie zostanie rozpoznany element cmd to wysyła informacje o błędzie do clienta (wiadomosc string)
                     String msg = "unknown commend: " + cmd + "\n";
@@ -62,10 +66,27 @@ public class ServerWorker extends Thread {
         clientSocket.close();   // zamykanie połączenia
     }
 
+    // metoda do obsługi komendy msg
+    // format: "msg" "login" body...
+    private void handleMessage(String[] tokens) throws IOException {
+        String sendTo = tokens[1];  // info o tym, do jakiej osoby wiadomość jest wysyłana
+        String body = tokens[2];     // treść wiadomości
+
+        List<ServerWorker> workerList = server.getWorkerList();
+        for(ServerWorker worker: workerList) {
+            if (sendTo.equalsIgnoreCase(worker.getLogin())) {
+                String outMsg = "msg " + login + " " + body + "\n";
+                worker.send(outMsg);
+            }
+        }
+    }
+
     // metoda zamykania połączenia klient-server
+    // jeśli uzytkownika wyloguje się to nalezy usuwac konkretną instancje z workerList
     private void handleLogoff() throws IOException {
         List<ServerWorker> workerList = server.getWorkerList();
-        
+        server.removeWorker(this);
+
         // wiadomość o zalogowaniu się użytkownika (do wszystkich userów)
         String onlineMsg = "offline " + login + "\n";
         for(ServerWorker worker: workerList) {
