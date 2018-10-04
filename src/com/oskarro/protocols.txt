@@ -9,10 +9,16 @@ User & Server
 
 3. User --> User
     * wiadomości bezpośrednie
-    * wiadomości ogólne
+    * wiadomości ogólne / wiadomości grupowe /
 
 
 Commands:
     login <user> <password>
     logoff
     msg <user> text....
+
+    #topic                          <-- chatroom / group chat
+    join #topic                     - dołączenie do jednej z grup
+    msg #topic body...              - wysyłanie wiadomości do konkretnej grupy
+    msg #topic:<login> body...      - szkic wiadomości przychodzącej
+    leave #topic                    - wychodzenie z danej grupy/pokoju

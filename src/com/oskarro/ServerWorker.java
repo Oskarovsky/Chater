@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 public class ServerWorker extends Thread {
@@ -13,7 +13,8 @@ public class ServerWorker extends Thread {
     private final Socket clientSocket;  // tworzymy Socket (klienta)
     private final Server server;        // tworzymy instancje serwera
     private String login = null;        // tworzymy miejsce na login
-    private OutputStream outputStream;
+    private OutputStream outputStream;  // tworzymy zmienną wyjściową
+    private HashSet<String> topicSet = new HashSet<>();     // tworzymy katalog(kolekcje) pokojów/grup
 
     public ServerWorker(Server server, Socket clientSocket) {
         this.server = server;
@@ -47,15 +48,19 @@ public class ServerWorker extends Thread {
             if (tokens != null && tokens.length > 0) {
                 String cmd = tokens[0];
                 // deklaracja poszczególnych komend
-                if ("logoff".equals(cmd) || "quit".equalsIgnoreCase(cmd)) {
+                if ("logoff".equals(cmd) || "quit".equalsIgnoreCase(cmd)) {     // komenda wylogowania z chatu
                     handleLogoff();
                     break;
-                } else if ("login".equalsIgnoreCase(cmd)) {
+                } else if ("login".equalsIgnoreCase(cmd)) {     // komenda dołączania do chatu
                     handleLogin(outputStream, tokens);
-                } else if ("msg".equalsIgnoreCase(cmd)) {
+                } else if ("msg".equalsIgnoreCase(cmd)) {       // komenda wysyłania wiadomości
                     // poniższa linijka łączy tokeny (poszczególne fragmenty wprowadzonej komendy) - bez tego można by wpisać tylko jeden wyraz jako wiadomość)
                     String[] tokensMsg = StringUtils.split(line, null, 3);
                     handleMessage(tokensMsg);
+                } else if ("join".equalsIgnoreCase(cmd)) {      // komenda dołączenia do grupy/pokoju
+                    handleJoin(tokens);
+                } else if ("leave".equalsIgnoreCase(cmd)) {     // komenda opuszczenia pokoju/grupy
+                    handleLeave(tokens);
                 } else {
                     // gdy nie zostanie rozpoznany element cmd to wysyła informacje o błędzie do clienta (wiadomosc string)
                     String msg = "unknown commend: " + cmd + "\n";
@@ -66,17 +71,55 @@ public class ServerWorker extends Thread {
         clientSocket.close();   // zamykanie połączenia
     }
 
+    // metoda wykorzystywana do opuszczania pokoju/grupy
+    private void handleLeave(String[] tokens) {
+        if (tokens.length > 1) {
+            String topic = tokens[1];       // przypisanie tokena do nazwy tematu
+            topicSet.remove(topic);            // pokój jest usuwany z listy pokojów danego uzytkownika
+        }
+    }
+
+    // funkcja odpowiada za sprawdzenie czy użytkownik należy do danej grupy (czy jest zainteresowany tym tematem)
+    public boolean isMemberOfTopic(String topic) {
+        return topicSet.contains(topic);
+    }
+
+    // metoda do obsługi komendy join (dołączanie do pokoju/grupy)
+    private void handleJoin(String[] tokens) {
+        if (tokens.length > 1) {
+            String topic = tokens[1];       // przypisanie tokena do nazwy tematu
+            topicSet.add(topic);            // pokój jest dodawany do pełnej listy pokojów
+        }
+    }
+
     // metoda do obsługi komendy msg
+    // odpowiada za bezposrednie wysylanie wiadomosci od jednego uzytkownika do drugiego
     // format: "msg" "login" body...
+    // format: "msg" "#topic" body...
     private void handleMessage(String[] tokens) throws IOException {
         String sendTo = tokens[1];  // info o tym, do jakiej osoby wiadomość jest wysyłana
         String body = tokens[2];     // treść wiadomości
 
+        // sprawdzenie pierwszego znaku - czy jest to #
+        // funkcja odczytuje # jako odniesienie do pokoju/tematu
+        boolean isTopic = sendTo.charAt(0) == '#';
+
+
+        // pobierana jest cala kilka zalogowanych userow, a nastepnie na podstawie wprowadzonego w komendzie loginu wysylana jest wiadomosc
         List<ServerWorker> workerList = server.getWorkerList();
         for(ServerWorker worker: workerList) {
-            if (sendTo.equalsIgnoreCase(worker.getLogin())) {
-                String outMsg = "msg " + login + " " + body + "\n";
-                worker.send(outMsg);
+            // jeśli pierwszy znak to # to funckja odnosi się do pokoju/tematu
+            if (isTopic) {
+                // jeśli użytkownik jest członkiem danej grupy to zostaje mu dostarczona ta wiadomość
+                if (worker.isMemberOfTopic(sendTo)) {
+                    String outMsg = "msg " + sendTo + ":" + login + " " + body + "\n";
+                    worker.send(outMsg);
+                }
+            } else {
+                if (sendTo.equalsIgnoreCase(worker.getLogin())) {
+                    String outMsg = "msg " + login + " " + body + "\n";
+                    worker.send(outMsg);
+                }
             }
         }
     }
@@ -138,8 +181,10 @@ public class ServerWorker extends Thread {
                     }
                 }
             } else {
+                // wiadomość o błędnym zalogowaniu użytkownika
                 String msg = "error login\n";
                 outputStream.write(msg.getBytes());
+                System.err.println("Login failed for " + login);
             }
         }
     }
