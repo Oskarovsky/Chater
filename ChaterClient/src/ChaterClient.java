@@ -30,6 +30,7 @@ public class ChaterClient {
     // FUNKCJA TESTOWA - SPRAWDZA JAK DZIAŁAJĄ KOMPONENTY
     public static void main(String[] args) throws IOException {
         ChaterClient client = new ChaterClient("localhost", 8818);  // instancja konkretnego serwera
+        // informuje o obecności użytkowników (online/offline)
         client.addUserStatusListener(new UserStatusListener() {
             @Override
             public void online(String login) {
@@ -43,6 +44,7 @@ public class ChaterClient {
         });
 
         // metoda do testowania MessageListener'a - przesyłanie wiadomości
+        // funkcja, która jest wywoływana, gdy użytkownik napisze jakąś wiaodmość
         client.addMessageListener(new MessageListener() {
             @Override
             public void onMessage(String fromLogin, String msgBody) {
@@ -69,20 +71,20 @@ public class ChaterClient {
     }
 
     // Metoda wysyłająca wiadomość do zalogowanego użytkownika (String odbiorca_wiadomosći, String tresc_wiadomosći)
-    private void msg(String sendTo, String msgBody) throws IOException {
+    public void msg(String sendTo, String msgBody) throws IOException {
         String cmd = "msg " + sendTo + " " + msgBody + "\n";
         serverOut.write(cmd.getBytes());
     }
 
     // komenda logoff dla klienta
-    private void logoff() throws IOException {
+    public void logoff() throws IOException {
         String cmd = "logoff\n";
         serverOut.write(cmd.getBytes());
     }
 
     // metoda wyswietlajaca informacje o zalogowanym uzytkowniku
     // funckja sprawdza czy użytkownik jest zalogowany (return -> false/true)
-    private boolean login(String login, String password) throws IOException {
+    public boolean login(String login, String password) throws IOException {
         String cmd = "login " + login + " " + password + "\n";
         serverOut.write(cmd.getBytes());
 
@@ -170,7 +172,7 @@ public class ChaterClient {
     }
 
     // funkcja odpowiadająca za połączenie klienta z serwerem
-    private boolean connect() {
+    public boolean connect() {
         try {
             this.socket = new Socket(serverName, serverPort);
             System.out.println("Client port is " + socket.getLocalPort());  // wyświetlanie informacji o aktualnym porcie używanym przez połączonego użytkownika

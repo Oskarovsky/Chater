@@ -1,0 +1,26 @@
+
+Gsquid:S1148Œ"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8¶ÕŒ©ä,
+zsquid:S1450"WRemove the "serverIn" field and declare it as a local variable in the relevant methods.(óÃôşÿÿÿÿ8·Ëéÿã,
+V
+squid:S1061"9Replace this use of System.out or System.err by a logger.(—İ„õ8ğ»™²ä,
+Gsquid:S1148¶"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8²ÌŞÿã,
+[
+squid:S1067"9Replace this use of System.out or System.err by a logger.(Ò”£ëÿÿÿÿÿ8Ğ™ïÿã,
+[
+squid:S106<"9Replace this use of System.out or System.err by a logger.(†–»Óøÿÿÿÿ8ÁåÖ ä,
+\
+squid:S106°"9Replace this use of System.out or System.err by a logger.(­¯‹Öøÿÿÿÿ8ÔÅøÿã,
+V
+squid:S106)"9Replace this use of System.out or System.err by a logger.(Àâ‰¹8ÿŸ¦¡ä,
+V
+squid:S106Z"9Replace this use of System.out or System.err by a logger.(µô 8ô–¿€ä,
+V
+squid:S1069"9Replace this use of System.out or System.err by a logger.(áäÕü8€Éòÿã,
+Wsquid:UnusedPrivateMethodN"+Remove this unused private "logoff" method.(®óŠ‰8Ù¼‘Àä,
+Bsquid:S1148ˆ"#Use a logger to log this exception.(Ç’Çê8ï©‹©ä,
+nsquid:CommentedOutCodeLineC"<This block of commented-out lines of code should be removed.(øäàüÿÿÿÿ8Ù¼‘Àä,
+[
+squid:S106$"9Replace this use of System.out or System.err by a logger.(Ôç´ùşÿÿÿÿ8„ğ¥¡ä,
+V
+squid:S106@"9Replace this use of System.out or System.err by a logger.(¾®ş8í³× ä,
+Esquid:S1604."(Make this anonymous inner class a lambda(Úî³48Îû°’å,
