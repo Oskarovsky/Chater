@@ -15,3 +15,11 @@ X
 (ChaterClient/src/UserStatusListener.java,3/7/37d589c01d16bd5d2ebff65ee54b3d62a37f0564
 M
 ChaterClient/ChaterClient.iml,c/5/c50a092c98498451b5609dbb050e90fdf6b19bd3
+S
+#.idea/sonarlint/issuestore/index.pb,9/f/9fe84ebb15faf917b7def6236dba604453cc61e0
+R
+"ChaterClient/src/UserListPane.java,5/d/5d5838b5fb0bf853fb2ddab95179d293ce4bbf8a
+Q
+!ChaterClient/src/MessagePane.java,0/e/0e8224a530493f6cf90ed596f89e59604ebdaaa0
+Q
+!ChaterClient/src/LoginWindow.java,8/2/8265a6f33bd9dcdf3d514e23e9c0720b5d221f89

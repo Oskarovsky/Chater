@@ -1,13 +1,13 @@
 
-?squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
 ?squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-´%squid:RedundantThrowsDeclarationCheck$"wRemove the declaration of thrown exception 'java.lang.InterruptedException', as it cannot be thrown from method's body.(’¼ãñÿÿÿÿÿ8ÀÚòşã,
-vsquid:S3776•"RRefactor this method to reduce its Cognitive Complexity from 26 to the 15 allowed.(£·ŞØüÿÿÿÿ8¡İ×úã,
-V
-squid:S106»"9Replace this use of System.out or System.err by a logger.(òªæ8„±µ€ä,
-]squid:S2142"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
 hsquid:HiddenFieldCheck˜"9Rename "login" which hides the field declared at line 15.(È’¨îÿÿÿÿÿ8¡İ×úã,
-[squid:S2147"DCombine this catch with the one at line 28, which has the same body.(ä ¹€
+?squid:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+´%squid:RedundantThrowsDeclarationCheck$"wRemove the declaration of thrown exception 'java.lang.InterruptedException', as it cannot be thrown from method's body.(’¼ãñÿÿÿÿÿ8ÀÚòşã,
 Ssquid:S1066©"/Merge this if statement with the enclosing one.(„áüÿÿÿÿ8¡İ×úã,
 W
 squid:S106¢"9Replace this use of System.out or System.err by a logger.(‹É¥ÿ8¡İ×úã,
+]squid:S2142"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€
+V
+squid:S106»"9Replace this use of System.out or System.err by a logger.(òªæ8„±µ€ä,
+[squid:S2147"DCombine this catch with the one at line 28, which has the same body.(ä ¹€
+vsquid:S3776•"RRefactor this method to reduce its Cognitive Complexity from 26 to the 15 allowed.(£·ŞØüÿÿÿÿ8¡İ×úã,

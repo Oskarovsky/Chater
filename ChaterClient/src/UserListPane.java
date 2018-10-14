@@ -3,6 +3,8 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class UserListPane extends JPanel implements UserStatusListener {
@@ -16,13 +18,32 @@ public class UserListPane extends JPanel implements UserStatusListener {
     // dodaje obecnego użytkownika do listy
     public UserListPane(ChaterClient client) {
         this.client = client;
-        this.client.addUserStatusListener(this);
+        this.client.addUserStatusListener(this);        // mówi nam czy użytkownik jest online czy offline
 
-        // główny komponent
+        // główny komponent GUI
         userListModel = new DefaultListModel<>();
         userListUI = new JList<>(userListModel);
         setLayout(new BorderLayout());
         add(new JScrollPane(userListUI), BorderLayout.CENTER);
+
+        // kiedy użytkownik dwukrotnie kliknie na nazwę innego user'a - ta nazwa zostanie zapamiętana
+        // i będzie wykorzystana do wybrania adresata wiadomości (otworzy nowe okno czatu)
+        userListUI.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() > 1) {
+                    String login = userListUI.getSelectedValue();
+                    MessagePane messagePane = new MessagePane(client, login);
+
+                    // metoda odpowiedzialna na otwieranie nowego okna po dwukrotnym kliknięciu na nazwę użytkownika
+                    JFrame f = new JFrame("Message: " + login);
+                    f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    f.setSize(500, 500);    // wymiary okna
+                    f.getContentPane().add(messagePane, BorderLayout.CENTER);   // dodaje nowe wiadomości do widocznego okna
+                    f.setVisible(true);     // włącza widoczność okna
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {

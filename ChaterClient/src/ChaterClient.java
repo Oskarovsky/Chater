@@ -117,7 +117,7 @@ public class ChaterClient {
         try {
             String line;
             // pętla czyta każdą linię z wyjścia output ze strony serwera (powinien on być równy z inputem klienta)
-            while ( (line = bufferedIn.readLine()) != null) {
+            while ((line = bufferedIn.readLine()) != null) {
                 // łączenie różnych wprowadzonych linii do jednego tokena
                 String[] tokens = StringUtils.split(line);
                 if (tokens != null && tokens.length > 0) {
